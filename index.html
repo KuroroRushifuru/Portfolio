@@ -34,7 +34,7 @@
           }
         }
       }
-    }
+    };
   </script>
 
   <style>
@@ -72,6 +72,66 @@
     }
     .equalizer-bar:nth-child(2) { animation-delay: 0.22s; }
     .equalizer-bar:nth-child(3) { animation-delay: 0.45s; }
+
+    /* Animated Discord Profile Frame & Dynamic Nitro Aura */
+    @keyframes frameRotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes profileEffectPulse {
+      0%, 100% { opacity: 0.45; transform: scale(1) translateY(0); }
+      50% { opacity: 0.85; transform: scale(1.03) translateY(-2px); }
+    }
+    @keyframes shimmerMove {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      100% { transform: translateX(200%) rotate(25deg); }
+    }
+
+    .discord-profile-frame {
+      position: relative;
+      background: linear-gradient(125deg, var(--discord-accent-1, #6366f1), var(--discord-accent-2, #8b5cf6), #ec4899, var(--discord-accent-1, #6366f1));
+      background-size: 300% 300%;
+      animation: frameRotate 10s ease infinite;
+      padding: 3px;
+      border-radius: 1.25rem;
+      box-shadow: 0 0 35px var(--discord-glow, rgba(99, 102, 241, 0.25)), 0 0 70px var(--discord-glow, rgba(99, 102, 241, 0.1));
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .discord-nitro-particles {
+      background-image: 
+        radial-gradient(circle at 20% 35%, var(--discord-accent-1, #6366f1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 65%, var(--discord-accent-2, #ec4899) 0%, transparent 45%);
+      mix-blend-mode: screen;
+      animation: profileEffectPulse 4s ease-in-out infinite alternate;
+    }
+
+    .discord-shimmer-sweep {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.03) 45%,
+        rgba(255, 255, 255, 0.12) 50%,
+        rgba(255, 255, 255, 0.03) 55%,
+        transparent 100%
+      );
+      pointer-events: none;
+      animation: shimmerMove 7s infinite linear;
+    }
+
+    .custom-status-emoji {
+      width: 1.15rem;
+      height: 1.15rem;
+      display: inline-block;
+      vertical-align: -0.2rem;
+      object-fit: contain;
+    }
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: #080c14; }
@@ -115,7 +175,6 @@
   <!-- Main Container -->
   <main class="relative z-10 max-w-4xl mx-auto px-6 pt-14 sm:pt-20 pb-24 space-y-16">
 
-    <!-- Hero / About Section -->
     <section id="about" class="space-y-6">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono bg-slate-900 border border-slate-800 text-slate-300">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -131,7 +190,6 @@
         </p>
       </div>
 
-      <!-- Authentic Bio -->
       <p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl font-light">
         Currently studying business and administration management at Aix-Marseille University. Outside of studies and technical tools, I spend my time playing guitar, hitting the gym to become the better version of myself, playing basketball, having fun playing games with my friends (especially Valorant), and cooking.
       </p>
@@ -200,7 +258,7 @@
       </div>
     </section>
 
-    <!-- LIVE PRESENCE / DISCORD ACTIVITY WIDGET -->
+    <!-- LIVE PRESENCE SECTION (With Discord Banner & Profile Effects) -->
     <section id="activity" class="space-y-4">
       <div class="border-b border-slate-800/80 pb-3 flex items-center justify-between">
         <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
@@ -213,35 +271,65 @@
         </span>
       </div>
 
-      <div class="glass-card rounded-2xl p-5 sm:p-6 space-y-5">
-        <!-- User Avatar & Status Summary -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3.5">
-            <div class="relative shrink-0">
-              <img id="live-avatar" src="https://api.dicebear.com/7.x/identicon/svg?seed=bl_soufiane" alt="Avatar" class="w-12 h-12 rounded-xl object-cover ring-1 ring-slate-700 bg-slate-900" />
-              <span id="live-status-dot" class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-[#080c14] bg-slate-600 transition-colors" title="Offline"></span>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span id="live-display-name" class="font-bold text-white text-sm">Soufiane</span>
-                <span id="live-username" class="text-[11px] font-mono text-slate-500">@bl_soufiane</span>
-              </div>
-              <p id="live-custom-status" class="text-xs font-mono text-indigo-300/80 truncate max-w-xs mt-0.5"></p>
-            </div>
+      <!-- Outer Profile Theme Wrapper (Frames the entire card with glowing profile aura) -->
+      <div id="discord-frame-wrapper" class="discord-profile-frame">
+        <!-- Inner Profile Theme Container -->
+        <div id="discord-profile-card" class="glass-card rounded-[1.1rem] overflow-hidden transition-all duration-500 relative bg-[#090d16]/95">
+          
+          <!-- Dynamic Discord Profile Banner (Maximum Fidelity 4K Edge Asset) -->
+          <div id="discord-banner-container" class="w-full h-36 sm:h-48 relative overflow-hidden bg-slate-950 transition-all duration-700">
+            <img id="discord-banner-img" 
+                 src="" 
+                 alt="Discord Banner" 
+                 class="w-full h-full object-cover object-center select-none pointer-events-none transition-opacity duration-500 opacity-0"
+                 style="image-rendering: -webkit-optimize-contrast; image-rendering: high-quality; transform: translateZ(0);" 
+                 decoding="sync" />
+            <!-- Very subtle bottom fade only to seamlessly merge into the profile card body -->
+            <div id="discord-banner-overlay" class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/80 pointer-events-none"></div>
           </div>
-          <div id="live-status-badge" class="text-[10px] font-mono px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-400 uppercase tracking-wider">
-            Syncing...
-          </div>
-        </div>
 
-        <!-- Dynamic Unlimited Activities Grid (Spotify, VS Code, PreMiD, Games) -->
-        <div id="activities-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-          <!-- Dynamically populated in real-time -->
+          <!-- User Information & Activities Body -->
+          <div class="p-5 sm:p-6 space-y-5 -mt-12 relative z-10">
+            <div class="flex items-end justify-between flex-wrap gap-4">
+              
+              <div class="flex items-end gap-3.5">
+                <!-- Circular Avatar with Official Discord Avatar Decoration -->
+                <div class="relative shrink-0 w-20 h-20">
+                  <!-- Avatar (Round with Discord Ring) -->
+                  <img id="live-avatar" src="https://api.dicebear.com/7.x/identicon/svg?seed=bl_soufiane" alt="Avatar" class="w-20 h-20 rounded-full object-cover ring-4 ring-[#080c14] bg-slate-900 relative z-0" />
+                  
+                  <!-- Discord Avatar Decoration Layer (Supports Animated APNG / Presets) -->
+                  <img id="live-avatar-decoration" src="" alt="Decoration" class="hidden absolute -top-2.5 -left-2.5 w-[124%] h-[124%] max-w-none pointer-events-none z-10 select-none object-contain" />
+
+                  <!-- Online Status Dot -->
+                  <span id="live-status-dot" class="absolute bottom-0.5 right-0.5 z-20 w-4 h-4 rounded-full border-[3px] border-[#080c14] bg-slate-600 transition-colors" title="Offline"></span>
+                </div>
+
+                <!-- Names & Custom Status -->
+                <div class="mb-1">
+                  <div class="flex items-center gap-2">
+                    <span id="live-display-name" class="font-bold text-white text-base tracking-tight">Soufiane</span>
+                    <span id="live-username" class="text-xs font-mono text-slate-400">@bl_soufiane</span>
+                  </div>
+                  <div id="live-custom-status" class="text-xs font-mono text-indigo-300 truncate max-w-xs mt-0.5 flex items-center gap-1.5 flex-wrap"></div>
+                </div>
+              </div>
+
+              <!-- Discord Sync Status Badge -->
+              <div id="live-status-badge" class="text-[10px] font-mono px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-slate-300 uppercase tracking-wider self-start sm:self-auto mb-1">
+                Syncing...
+              </div>
+            </div>
+
+            <!-- Dynamic Activities Grid (Spotify, Games, VS Code, PreMiD, Stream) -->
+            <div id="activities-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <!-- Dynamically populated in real-time -->
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Interests & Passions Section -->
     <section id="interests" class="space-y-6">
       <div class="border-b border-slate-800/80 pb-3 flex items-center justify-between">
         <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
@@ -266,7 +354,6 @@
           </div>
 
           <div class="pt-2 border-t border-slate-800/80 space-y-2 text-xs font-mono">
-            <!-- Clickable Favorite Track -->
             <a href="https://open.spotify.com/track/6wfb4nI2Vih263JqC8WSoW?si=6b71ef40c22e4a84" target="_blank" rel="noopener noreferrer" 
                class="flex items-center justify-between p-2 rounded-lg bg-slate-900 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/40 transition group text-slate-300">
               <div class="flex items-center gap-2 truncate">
@@ -276,7 +363,6 @@
               <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 shrink-0 ml-2"></i>
             </a>
 
-            <!-- Clickable Curated Playlist -->
             <a href="https://open.spotify.com/playlist/5qFM1CJ8rdYC0n7kzFN2Lv?si=f09d3bb81e9a4019" target="_blank" rel="noopener noreferrer" 
                class="flex items-center justify-between p-2 rounded-lg bg-slate-900 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/40 transition group text-slate-300">
               <div class="flex items-center gap-2 truncate">
@@ -306,7 +392,7 @@
           </div>
         </div>
 
-        <!-- 3. Gaming: Valorant & Friends (Clean Box Layout) -->
+        <!-- 3. Gaming: Valorant & Friends -->
         <div class="glass-card p-5 rounded-xl space-y-3 flex flex-col justify-between">
           <div class="space-y-2">
             <div class="flex items-center gap-2 text-indigo-400 font-semibold text-sm">
@@ -318,7 +404,6 @@
             </p>
           </div>
 
-          <!-- Clean Riot Box: ID Row + Separate Tracker Link -->
           <div class="pt-2 border-t border-slate-800/80 space-y-2">
             <!-- Row 1: Riot ID & Copy Button -->
             <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800">
@@ -365,7 +450,6 @@
       </div>
     </section>
 
-    <!-- Technical Skills Section -->
     <section id="skills" class="space-y-6">
       <div class="border-b border-slate-800/80 pb-3 flex items-center justify-between">
         <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
@@ -376,7 +460,6 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <!-- Programming & Web Standards -->
         <div class="glass-card p-5 rounded-xl space-y-3">
           <p class="text-xs font-mono font-semibold uppercase text-indigo-400">Languages & Web Standards</p>
           <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-300">
@@ -388,7 +471,6 @@
           </div>
         </div>
 
-        <!-- Systems & Developer Environment -->
         <div class="glass-card p-5 rounded-xl space-y-3">
           <p class="text-xs font-mono font-semibold uppercase text-indigo-400">Systems & Environments</p>
           <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-300">
@@ -464,13 +546,9 @@
     <p>© 2026 Soufiane • Built with HTML, Tailwind CSS & JavaScript</p>
   </footer>
 
-  <!-- Interactive Scripts & Live Discord Sync -->
   <script>
     lucide.createIcons();
 
-    // ─────────────────────────────────────────────────────────────
-    // HARDCODED DISCORD USER ID
-    // ─────────────────────────────────────────────────────────────
     const MY_DISCORD_USER_ID = "1092550069061947413";
 
     // 1. Ambient Background Constellation
@@ -485,13 +563,15 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    const particles = Array.from({ length: 35 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      radius: Math.random() * 1.5 + 0.8
-    }));
+    const particles = Array.from({ length: 35 }, function() {
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        radius: Math.random() * 1.5 + 0.8
+      };
+    });
 
     function animateAmbient() {
       ctx.clearRect(0, 0, width, height);
@@ -516,7 +596,7 @@
           let dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < 110) {
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - dist / 110)})`;
+            ctx.strokeStyle = 'rgba(99, 102, 241, ' + (0.1 * (1 - dist / 110)) + ')';
             ctx.lineWidth = 0.6;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
@@ -529,50 +609,58 @@
     }
     animateAmbient();
 
-    // 2. Copy Discord Handle
+    // 2. Clipboard Helpers (iframe compliant)
+    function fallbackCopy(text) {
+      const tempInput = document.createElement("input");
+      tempInput.style.position = "fixed";
+      tempInput.style.opacity = "0";
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand("copy");
+      } catch (e) {
+        console.debug("Clipboard copy error:", e);
+      }
+      document.body.removeChild(tempInput);
+    }
+
     function copyDiscordHandle() {
       const handle = "bl_soufiane";
-      const tempInput = document.createElement("input");
-      tempInput.value = handle;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand("copy");
-      document.body.removeChild(tempInput);
+      fallbackCopy(handle);
 
       const label = document.getElementById("discord-handle-text");
-      const original = label.innerText;
-      label.innerText = "Copied!";
-      label.classList.add("text-emerald-400");
-      setTimeout(() => {
-        label.innerText = original;
-        label.classList.remove("text-emerald-400");
-      }, 1500);
+      if (label) {
+        const original = label.innerText;
+        label.innerText = "Copied!";
+        label.classList.add("text-emerald-400");
+        setTimeout(function() {
+          label.innerText = original;
+          label.classList.remove("text-emerald-400");
+        }, 1500);
+      }
     }
 
-    // 3. Copy Riot ID
     function copyRiotId() {
       const riotId = "Mowatermelonn#2411";
-      const tempInput = document.createElement("input");
-      tempInput.value = riotId;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand("copy");
-      document.body.removeChild(tempInput);
+      fallbackCopy(riotId);
 
       const statusSpan = document.getElementById("riot-copy-status");
-      statusSpan.innerText = "Copied!";
-      statusSpan.classList.add("text-emerald-400");
-      setTimeout(() => {
-        statusSpan.innerText = "Copy";
-        statusSpan.classList.remove("text-emerald-400");
-      }, 1500);
+      if (statusSpan) {
+        statusSpan.innerText = "Copied!";
+        statusSpan.classList.add("text-emerald-400");
+        setTimeout(function() {
+          statusSpan.innerText = "Copy";
+          statusSpan.classList.remove("text-emerald-400");
+        }, 1500);
+      }
     }
 
-    // 4. Live Presence & Lanyard Integration
     const statusMap = {
       online: { color: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]", label: "Online" },
       idle: { color: "bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]", label: "Away / Idle" },
       dnd: { color: "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)]", label: "Do Not Disturb" },
+      streaming: { color: "bg-purple-500 shadow-[0_0_14px_rgba(168,85,247,0.95)]", label: "Streaming" },
       offline: { color: "bg-slate-600", label: "Offline" }
     };
 
@@ -583,7 +671,7 @@
       const totalSec = Math.floor(ms / 1000);
       const minutes = Math.floor(totalSec / 60);
       const seconds = totalSec % 60;
-      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
     }
 
     function formatElapsed(startMs) {
@@ -592,110 +680,268 @@
       const mins = Math.floor((elapsedSec % 3600) / 60);
       const secs = elapsedSec % 60;
       if (hrs > 0) {
-        return `${hrs}:${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs} elapsed`;
+        return hrs + ":" + (mins < 10 ? '0' : '') + mins + ":" + (secs < 10 ? '0' : '') + secs + " elapsed";
       }
-      return `${mins}:${secs < 10 ? '0' : ''}${secs} elapsed`;
+      return mins + ":" + (secs < 10 ? '0' : '') + secs + " elapsed";
     }
 
-    function resolveDiscordAsset(appId, assetId) {
-      if (!assetId) return null;
+    const FALLBACK_ICONS = {
+      // Official VALORANT V geometric insignia
+      'valorant': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='20' fill='%230f1923'/><path fill-rule='evenodd' clip-rule='evenodd' d='M16 26L45 74H25L10 50L16 26ZM84 26L54 74L50 68L74 26H84Z' fill='%23FF4655'/></svg>",
+      'visual studio code': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.5' fill='%2318181b'/><path d='M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.94-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z' fill='%23007ACC'/></svg>",
+      'code': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.5' fill='%2318181b'/><path d='M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.94-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z' fill='%23007ACC'/></svg>",
+      'league of legends': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='20' fill='%230A1428'/><path d='M28 22H42V66H74V78H28V22Z' fill='%23C89B3C'/><path d='M34 28H38V60H68V72H34V28Z' fill='%23F0E6D2'/></svg>",
+      'generic': "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none'><rect width='100' height='100' rx='20' fill='%231e1b4b'/><path d='M30 45H40M35 40V50M62 43H63M71 49H72M32 64L25 40C23 35 27 30 33 30H67C73 30 77 35 75 40L68 64C66 69 60 70 56 66L50 60L44 66C40 70 34 69 32 64Z' stroke='%23818cf8' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/></svg>"
+    };
+
+    function getFallbackIcon(gameName) {
+      const key = (gameName || '').toLowerCase().trim();
+      for (const known in FALLBACK_ICONS) {
+        if (key.indexOf(known) !== -1) return FALLBACK_ICONS[known];
+      }
+      return FALLBACK_ICONS['generic'];
+    }
+
+    // Candidate URL Generator with failover list for Discord CDN, DSTN Proxy, and unproxied sources
+    function getAssetCandidateList(appId, assetId) {
+      const candidates = [];
+      if (!assetId) {
+        if (appId) {
+          candidates.push('https://dcdn.dstn.to/app-icons/' + appId + '.png?size=256');
+          candidates.push('https://cdn.discordapp.com/app-icons/' + appId + '.png');
+        }
+        return candidates;
+      }
+
+      if (assetId.startsWith('http://') || assetId.startsWith('https://')) {
+        candidates.push(assetId);
+        return candidates;
+      }
+
       if (assetId.startsWith('mp:external/')) {
-        const cleaned = assetId.replace(/^mp:external\/[^\/]+\/https?\//, 'https://');
-        return cleaned.startsWith('http') ? cleaned : `https://${cleaned}`;
+        // Direct unproxied URL extraction
+        const direct = assetId.replace(/^mp:external\/[^\/]+\/https?\//, 'https://').replace(/^mp:external\/[^\/]+\/http\//, 'http://');
+        if (direct && direct !== assetId) candidates.push(direct);
+        candidates.push('https://media.discordapp.net/' + assetId.replace(/^mp:/, ''));
+      } else if (assetId.startsWith('mp:')) {
+        candidates.push('https://media.discordapp.net/' + assetId.replace(/^mp:/, ''));
+      } else if (assetId.startsWith('spotify:')) {
+        candidates.push('https://i.scdn.co/image/' + assetId.replace(/^spotify:/, ''));
+      } else if (appId) {
+        candidates.push('https://cdn.discordapp.com/app-assets/' + appId + '/' + assetId + '.png?size=256');
+        candidates.push('https://cdn.discordapp.com/app-assets/' + appId + '/' + assetId + '.webp?size=256');
       }
-      if (assetId.startsWith('spotify:')) {
-        return `https://i.scdn.co/image/${assetId.replace('spotify:', '')}`;
+
+      if (appId) {
+        // Discord Verified App Icon via DSTN Lanyard CDN
+        candidates.push('https://dcdn.dstn.to/app-icons/' + appId + '.png?size=256');
       }
-      return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
+
+      return candidates;
+    }
+
+    // Step-by-step fallback runner
+    function handleCandidateError(img) {
+      if (!img) return;
+      const candidates = (img.dataset.candidates || '').split('|||').filter(Boolean);
+      let idx = parseInt(img.dataset.idx || '0', 10);
+      idx++;
+      if (idx < candidates.length) {
+        img.dataset.idx = idx.toString();
+        img.src = candidates[idx];
+      } else {
+        img.onerror = null;
+        img.src = getFallbackIcon(img.dataset.gamename || '');
+      }
     }
 
     function renderPresence(d) {
       if (!d) return;
 
-      // Status indicator & avatar
-      const st = statusMap[d.discord_status] || statusMap.offline;
+      // 1. Detect Streaming Activity (Type 1) or Standard Status
+      const isStreaming = (d.activities || []).some(function(a) { return a.type === 1; }) || d.discord_status === 'streaming';
+      const st = isStreaming ? statusMap.streaming : (statusMap[d.discord_status] || statusMap.offline);
+
       const dot = document.getElementById('live-status-dot');
       if (dot) {
-        dot.className = `absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-[#080c14] transition-colors ${st.color}`;
+        dot.className = "absolute bottom-0.5 right-0.5 z-20 w-4 h-4 rounded-full border-[3px] border-[#080c14] transition-colors " + st.color;
       }
       const badge = document.getElementById('live-status-badge');
-      if (badge) badge.textContent = st.label;
-
-      if (d.discord_user) {
-        document.getElementById('live-display-name').textContent = d.discord_user.global_name || d.discord_user.username;
-        document.getElementById('live-username').textContent = `@${d.discord_user.username}`;
-        if (d.discord_user.avatar) {
-          document.getElementById('live-avatar').src = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.png?size=128`;
+      if (badge) {
+        badge.textContent = st.label;
+        if (isStreaming) {
+          badge.className = "text-[10px] font-mono px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/60 text-purple-300 uppercase tracking-wider self-start sm:self-auto mb-1 animate-pulse";
+        } else {
+          badge.className = "text-[10px] font-mono px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-slate-300 uppercase tracking-wider self-start sm:self-auto mb-1";
         }
       }
 
-      // Custom status
-      const custom = d.activities?.find(a => a.type === 4);
+      // 2. DISCORD PROFILE THEME, EFFECTS & FRAME SYNC
+      if (d.discord_user) {
+        const u = d.discord_user;
+        const dName = document.getElementById('live-display-name');
+        const uName = document.getElementById('live-username');
+        const aImg = document.getElementById('live-avatar');
+        const decoImg = document.getElementById('live-avatar-decoration');
+        const bannerEl = document.getElementById('discord-banner');
+        const frameWrapper = document.getElementById('discord-frame-wrapper');
+
+        if (dName) dName.textContent = u.global_name || u.username;
+        if (uName) uName.textContent = "@" + u.username;
+
+        // Avatar (Animated GIF if nitro, otherwise PNG)
+        if (aImg && u.avatar) {
+          const isAnim = u.avatar.startsWith('a_');
+          aImg.src = "https://cdn.discordapp.com/avatars/" + u.id + "/" + u.avatar + (isAnim ? ".gif" : ".png") + "?size=160";
+        }
+
+        // Avatar Decoration (Animated APNG or preset)
+        const decoAsset = (u.avatar_decoration_data && u.avatar_decoration_data.asset) || u.avatar_decoration;
+        if (decoImg) {
+          if (decoAsset) {
+            decoImg.src = "https://cdn.discordapp.com/avatar-decoration-presets/" + decoAsset + ".png?size=160&passthrough=true";
+            decoImg.classList.remove('hidden');
+          } else {
+            decoImg.classList.add('hidden');
+          }
+        }
+
+        // Resolve Accent & Banner Color
+        let primaryColor = u.banner_color;
+        if (!primaryColor && u.accent_color) {
+          primaryColor = '#' + u.accent_color.toString(16).padStart(6, '0');
+        }
+        if (!primaryColor) primaryColor = '#6366f1';
+
+        // Synchronize Live Discord Banner (Image / Animated GIF / Color)
+        const bannerContainer = document.getElementById('discord-banner-container');
+        const bannerImg = document.getElementById('discord-banner-img');
+
+        if (bannerContainer) {
+          bannerContainer.style.backgroundColor = primaryColor;
+        }
+
+        if (bannerImg) {
+          if (u.banner) {
+            const isBannerAnim = u.banner.startsWith('a_');
+            const bannerExt = isBannerAnim ? 'gif' : 'png';
+            // Request ultra-high resolution (4096px) lossless image directly from Discord edge CDN
+            const bannerUrl = "https://cdn.discordapp.com/banners/" + u.id + "/" + u.banner + "." + bannerExt + "?size=4096";
+            
+            if (bannerImg.src !== bannerUrl) {
+              bannerImg.src = bannerUrl;
+              bannerImg.onload = function() {
+                bannerImg.classList.remove('opacity-0');
+              };
+            }
+          } else {
+            // Secondary direct lookup if gateway doesn't provide user banner
+            fetchDirectUserBanner(u.id, bannerImg, bannerContainer, primaryColor);
+          }
+        }
+
+        // Secondary gradient stop for the framing aura
+        let secondaryColor = '#8b5cf6';
+        if (u.theme_colors && u.theme_colors.length >= 2) {
+          secondaryColor = '#' + u.theme_colors[1].toString(16).padStart(6, '0');
+        } else {
+          secondaryColor = primaryColor === '#6366f1' ? '#ec4899' : '#818cf8';
+        }
+
+        // Synchronize Frame Accent Variables
+        if (frameWrapper) {
+          frameWrapper.style.setProperty('--discord-accent-1', primaryColor);
+          frameWrapper.style.setProperty('--discord-accent-2', secondaryColor);
+          frameWrapper.style.setProperty('--discord-glow', primaryColor + '40');
+        }
+      }
+
+      // 3. Custom Status with Live Emoji Rendering
+      const custom = (d.activities || []).find(function(a) { return a.type === 4; });
       const customEl = document.getElementById('live-custom-status');
       if (customEl) {
         if (custom && (custom.state || custom.emoji)) {
-          customEl.textContent = `${custom.emoji?.name || ''} ${custom.state || ''}`.trim();
+          let emojiHtml = '';
+          if (custom.emoji) {
+            if (custom.emoji.id) {
+              // Custom Discord server or Nitro emoji
+              const isAnim = custom.emoji.animated;
+              const ext = isAnim ? 'gif' : 'png';
+              const emojiUrl = 'https://cdn.discordapp.com/emojis/' + custom.emoji.id + '.' + ext + '?size=48&quality=lossless';
+              emojiHtml = '<img src="' + emojiUrl + '" alt="' + (custom.emoji.name || '') + '" class="custom-status-emoji" />';
+            } else if (custom.emoji.name) {
+              // Standard unicode emoji
+              emojiHtml = '<span class="inline-block">' + custom.emoji.name + '</span>';
+            }
+          }
+          
+          let stateText = custom.state || '';
+          // Parse inline Discord emoji syntax <:name:id> or <a:name:id> inside the text
+          stateText = stateText.replace(/<a?:(\w+):(\d+)>/g, function(match, name, id) {
+            const isAnim = match.startsWith('<a:');
+            const ext = isAnim ? 'gif' : 'png';
+            return '<img src="https://cdn.discordapp.com/emojis/' + id + '.' + ext + '?size=48&quality=lossless" alt="' + name + '" class="custom-status-emoji" />';
+          });
+
+          customEl.innerHTML = emojiHtml + '<span>' + stateText + '</span>';
         } else {
-          customEl.textContent = '';
+          customEl.innerHTML = '';
         }
       }
 
-      // Clear previous timers
       if (spotifyTimer) {
         clearInterval(spotifyTimer);
         spotifyTimer = null;
       }
-      rpcIntervals.forEach(id => clearInterval(id));
+      rpcIntervals.forEach(function(id) { clearInterval(id); });
       rpcIntervals = [];
 
       const container = document.getElementById('activities-container');
+      if (!container) return;
       container.innerHTML = '';
 
       const hasSpotify = d.listening_to_spotify && d.spotify;
       
-      // Filter out custom statuses and duplicate Spotify activity objects
-      const rpcActivities = (d.activities || []).filter(a => 
-        a.type !== 4 && 
-        a.id !== 'spotify:1' && 
-        !(hasSpotify && a.name?.toLowerCase() === 'spotify')
-      );
+      const rpcActivities = (d.activities || []).filter(function(a) {
+        return a.type !== 4 && 
+          a.id !== 'spotify:1' && 
+          !(hasSpotify && a.name && a.name.toLowerCase() === 'spotify');
+      });
 
-      // ─── 1. RENDER SPOTIFY (IF ACTIVE VIA OFFICIAL DISCORD-SPOTIFY SYNC) ───
+      // 4. Render Spotify Card
       if (hasSpotify) {
         const s = d.spotify;
         const spotifyCard = document.createElement('div');
-        spotifyCard.className = 'p-4 rounded-xl bg-emerald-950/15 border border-emerald-500/40 flex flex-col justify-between space-y-3 transition-colors';
-        spotifyCard.innerHTML = `
-          <div class="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span class="flex items-center gap-1.5 text-emerald-400 font-semibold">
-              <i data-lucide="music" class="w-3.5 h-3.5"></i>
-              Spotify Playback
-            </span>
-            <div class="flex items-end gap-1 h-3.5">
-              <span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>
-              <span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>
-              <span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>
-            </div>
-          </div>
+        spotifyCard.className = 'p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/40 flex flex-col justify-between space-y-3 transition-colors';
+        spotifyCard.innerHTML = 
+          '<div class="flex items-center justify-between text-xs font-mono text-slate-400">' +
+            '<span class="flex items-center gap-1.5 text-emerald-400 font-semibold">' +
+              '<i data-lucide="music" class="w-3.5 h-3.5"></i>' +
+              'Spotify Playback' +
+            '</span>' +
+            '<div class="flex items-end gap-1 h-3.5">' +
+              '<span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>' +
+              '<span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>' +
+              '<span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex items-center gap-3.5">' +
+            '<img src="' + s.album_art_url + '" class="w-12 h-12 rounded-lg object-cover bg-slate-800 shrink-0 border border-emerald-500/20 shadow-sm" alt="Album Cover" />' +
+            '<div class="min-w-0 flex-1">' +
+              '<p class="font-semibold text-white text-xs truncate">' + s.song + '</p>' +
+              '<p class="text-[11px] text-slate-400 truncate mt-0.5">' + s.artist + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="pt-1 space-y-1">' +
+            '<div class="w-full bg-slate-800 rounded-full h-1 overflow-hidden">' +
+              '<div id="dyn-spotify-progress" class="bg-emerald-400 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>' +
+            '</div>' +
+            '<div class="flex justify-between text-[10px] font-mono text-slate-500">' +
+              '<span id="dyn-current-time">0:00</span>' +
+              '<span id="dyn-total-time">0:00</span>' +
+            '</div>' +
+          '</div>';
 
-          <div class="flex items-center gap-3.5">
-            <img src="${s.album_art_url}" class="w-12 h-12 rounded-lg object-cover bg-slate-800 shrink-0 border border-emerald-500/20 shadow-sm" alt="Album Cover" />
-            <div class="min-w-0 flex-1">
-              <p class="font-semibold text-white text-xs truncate">${s.song}</p>
-              <p class="text-[11px] text-slate-400 truncate mt-0.5">${s.artist}</p>
-            </div>
-          </div>
-
-          <div class="pt-1 space-y-1">
-            <div class="w-full bg-slate-800 rounded-full h-1 overflow-hidden">
-              <div id="dyn-spotify-progress" class="bg-emerald-400 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
-            </div>
-            <div class="flex justify-between text-[10px] font-mono text-slate-500">
-              <span id="dyn-current-time">0:00</span>
-              <span id="dyn-total-time">0:00</span>
-            </div>
-          </div>
-        `;
         container.appendChild(spotifyCard);
 
         const start = s.timestamps.start;
@@ -710,133 +956,132 @@
           const now = Date.now();
           const elapsed = Math.min(Math.max(0, now - start), total);
           const percent = (elapsed / total) * 100;
-          if (progressBar) progressBar.style.width = `${percent}%`;
+          if (progressBar) progressBar.style.width = percent + '%';
           if (currentTimeEl) currentTimeEl.textContent = formatTime(elapsed);
         }
         updateProgress();
         spotifyTimer = setInterval(updateProgress, 1000);
       }
 
-      // ─── 2. RENDER ALL ACTIVE RPCS (MUSIC PRESENCE, VS CODE, PREMID, GAMES, ETC.) ───
-      rpcActivities.forEach((rpc, idx) => {
-        const isVSCode = rpc.name?.toLowerCase().includes('visual studio code') || rpc.name?.toLowerCase() === 'code';
-        const isPreMiD = rpc.name?.toLowerCase().includes('premid') || (rpc.assets?.large_text?.toLowerCase().includes('premid'));
-        const isMusicRPC = rpc.type === 2 || rpc.name?.toLowerCase().includes('music presence') || rpc.name?.toLowerCase().includes('apple music') || rpc.name?.toLowerCase().includes('tidal') || rpc.name?.toLowerCase().includes('deezer');
-        
-        let iconSrc = null;
-        if (rpc.assets?.large_image) {
-          iconSrc = resolveDiscordAsset(rpc.application_id, rpc.assets.large_image);
-        } else if (rpc.assets?.small_image) {
-          iconSrc = resolveDiscordAsset(rpc.application_id, rpc.assets.small_image);
-        } else if (isVSCode) {
-          iconSrc = 'https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/visual-studio-code/visual-studio-code.png';
-        } else if (isMusicRPC) {
-          iconSrc = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=100&h=100&fit=crop';
-        } else {
-          iconSrc = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(rpc.name || 'app')}`;
-        }
+      // 5. Render All RPC Activities (Streaming, Games, Coding, PreMiD)
+      rpcActivities.forEach(function(rpc, idx) {
+        const gameNameLower = (rpc.name || '').trim().toLowerCase();
+        const isStreamingAct = rpc.type === 1;
+        const isVSCode = gameNameLower.indexOf('visual studio code') !== -1 || gameNameLower === 'code';
+        const isPreMiD = gameNameLower.indexOf('premid') !== -1 || (rpc.assets && rpc.assets.large_text && rpc.assets.large_text.toLowerCase().indexOf('premid') !== -1);
+        const isMusicRPC = rpc.type === 2 || gameNameLower.indexOf('music presence') !== -1 || gameNameLower.indexOf('apple music') !== -1 || gameNameLower.indexOf('tidal') !== -1 || gameNameLower.indexOf('deezer') !== -1;
 
-        let smallIconSrc = null;
-        if (rpc.assets?.small_image && rpc.assets?.large_image) {
-          smallIconSrc = resolveDiscordAsset(rpc.application_id, rpc.assets.small_image);
-        }
+        // Generate candidate URLs
+        const rawLargeAsset = (rpc.assets && rpc.assets.large_image) ? rpc.assets.large_image : null;
+        const candidates = getAssetCandidateList(rpc.application_id, rawLargeAsset);
+        const primarySrc = candidates.length > 0 ? candidates[0] : getFallbackIcon(rpc.name);
+        const candidatesJoined = candidates.join('|||');
 
-        let borderColor = 'border-indigo-500/40 bg-indigo-950/10';
+        let smallIconCandidates = [];
+        if (rpc.assets && rpc.assets.small_image) {
+          smallIconCandidates = getAssetCandidateList(rpc.application_id, rpc.assets.small_image);
+        }
+        const smallSrc = smallIconCandidates.length > 0 ? smallIconCandidates[0] : null;
+
+        let borderColor = 'border-indigo-500/40 bg-indigo-950/15';
         let tagColor = 'text-indigo-400';
         let iconName = 'gamepad-2';
+        let statusBadgeText = 'Active';
 
-        if (isVSCode) {
-          borderColor = 'border-sky-500/40 bg-sky-950/10';
+        if (isStreamingAct) {
+          borderColor = 'border-purple-500/50 bg-purple-950/20';
+          tagColor = 'text-purple-400';
+          iconName = 'radio';
+          statusBadgeText = 'Live Stream';
+        } else if (isVSCode) {
+          borderColor = 'border-sky-500/40 bg-sky-950/15';
           tagColor = 'text-sky-400';
           iconName = 'code-2';
         } else if (isMusicRPC) {
-          borderColor = 'border-emerald-500/40 bg-emerald-950/10';
+          borderColor = 'border-emerald-500/40 bg-emerald-950/15';
           tagColor = 'text-emerald-400';
           iconName = 'music';
         } else if (isPreMiD) {
-          borderColor = 'border-purple-500/40 bg-purple-950/10';
+          borderColor = 'border-purple-500/40 bg-purple-950/15';
           tagColor = 'text-purple-400';
           iconName = 'globe';
         }
 
         const card = document.createElement('div');
-        card.className = `p-4 rounded-xl border ${borderColor} flex flex-col justify-between space-y-3 transition-colors`;
-        
-        // Progress bar calculation if Music Presence or any app sends start and end timestamps
-        const hasTimestamps = rpc.timestamps?.start && rpc.timestamps?.end;
+        card.className = 'p-4 rounded-xl border ' + borderColor + ' flex flex-col justify-between space-y-3 transition-colors';
+
+        const hasTimestamps = rpc.timestamps && rpc.timestamps.start && rpc.timestamps.end;
         const totalDuration = hasTimestamps ? (rpc.timestamps.end - rpc.timestamps.start) : null;
+        const partyText = rpc.party && rpc.party.size ? ('Party (' + (rpc.party.size[0] || 1) + '/' + (rpc.party.size[1] || 1) + ')') : '';
+        const secondaryText = (rpc.assets && rpc.assets.large_text) ? rpc.assets.large_text : partyText;
+        const smallTooltip = (rpc.assets && rpc.assets.small_text) ? rpc.assets.small_text.replace(/"/g, '&quot;') : '';
 
-        card.innerHTML = `
-          <div class="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span class="flex items-center gap-1.5 ${tagColor} font-semibold">
-              <i data-lucide="${iconName}" class="w-3.5 h-3.5"></i>
-              <span>${rpc.name}</span>
-            </span>
-            ${isMusicRPC ? `
-              <div class="flex items-end gap-1 h-3.5">
-                <span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>
-                <span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>
-                <span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>
-              </div>
-            ` : `<span class="text-[10px] font-mono text-emerald-400 font-medium">Active</span>`}
-          </div>
-
-          <div class="flex items-center gap-3.5">
-            <div class="relative shrink-0 w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-700/50">
-              <img src="${iconSrc}" class="w-full h-full object-cover" alt="${rpc.name}" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(rpc.name)}';" />
-              ${smallIconSrc ? `<img src="${smallIconSrc}" class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-[#080c14] bg-slate-900 object-cover" />` : ''}
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="font-semibold text-white text-xs truncate">${rpc.details || rpc.name}</p>
-              <p class="text-[11px] text-slate-400 truncate mt-0.5">${rpc.state || rpc.assets?.large_text || 'Active session'}</p>
-            </div>
-          </div>
-
-          ${hasTimestamps ? `
-            <div class="pt-1 space-y-1">
-              <div class="w-full bg-slate-800 rounded-full h-1 overflow-hidden">
-                <div id="rpc-progress-${idx}" class="bg-emerald-400 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
-              </div>
-              <div class="flex justify-between text-[10px] font-mono text-slate-500">
-                <span id="rpc-curr-${idx}">0:00</span>
-                <span>${formatTime(totalDuration)}</span>
-              </div>
-            </div>
-          ` : `
-            <div class="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1 border-t border-slate-800/40">
-              <span class="truncate max-w-[200px] text-slate-400">${rpc.assets?.large_text || (rpc.party ? `Party (${rpc.party.size?.[0] || 1}/${rpc.party.size?.[1] || 1})` : '')}</span>
-              <span id="rpc-time-${idx}" class="${tagColor} shrink-0"></span>
-            </div>
-          `}
-        `;
+        card.innerHTML = 
+          '<div class="flex items-center justify-between text-xs font-mono text-slate-400">' +
+            '<span class="flex items-center gap-1.5 ' + tagColor + ' font-semibold truncate mr-2">' +
+              '<i data-lucide="' + iconName + '" class="w-3.5 h-3.5 shrink-0"></i>' +
+              '<span class="truncate">' + rpc.name + '</span>' +
+            '</span>' +
+            (isMusicRPC ? (
+              '<div class="flex items-end gap-1 h-3.5 shrink-0">' +
+                '<span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>' +
+                '<span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>' +
+                '<span class="w-0.5 bg-emerald-400 rounded equalizer-bar"></span>' +
+              '</div>'
+            ) : '<span class="text-[10px] font-mono ' + tagColor + ' font-medium shrink-0">' + statusBadgeText + '</span>') +
+          '</div>' +
+          '<div class="flex items-center gap-3.5">' +
+            '<div class="relative shrink-0 w-12 h-12 rounded-lg bg-slate-900/90 flex items-center justify-center overflow-visible border border-slate-700/60 p-0.5">' +
+              '<img src="' + primarySrc + '" data-candidates="' + candidatesJoined + '" data-idx="0" data-gamename="' + (rpc.name || '') + '" onerror="handleCandidateError(this)" class="w-full h-full object-cover rounded-md" alt="' + rpc.name + '" title="' + ((rpc.assets && rpc.assets.large_text) ? rpc.assets.large_text.replace(/"/g, '&quot;') : rpc.name) + '" />' +
+              (smallSrc ? '<img src="' + smallSrc + '" title="' + smallTooltip + '" onerror="this.style.display=\'none\'" class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-[#080c14] bg-slate-900 object-cover z-10" />' : '') +
+            '</div>' +
+            '<div class="min-w-0 flex-1">' +
+              '<p class="font-semibold text-white text-xs truncate">' + (rpc.details || rpc.name) + '</p>' +
+              '<p class="text-[11px] text-slate-400 truncate mt-0.5">' + (rpc.state || (rpc.assets && rpc.assets.large_text) || (isStreamingAct ? 'Broadcasting live' : 'Active session')) + '</p>' +
+            '</div>' +
+          '</div>' +
+          (hasTimestamps ? (
+            '<div class="pt-1 space-y-1">' +
+              '<div class="w-full bg-slate-800 rounded-full h-1 overflow-hidden">' +
+                '<div id="rpc-progress-' + idx + '" class="bg-emerald-400 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>' +
+              '</div>' +
+              '<div class="flex justify-between text-[10px] font-mono text-slate-500">' +
+                '<span id="rpc-curr-' + idx + '">0:00</span>' +
+                '<span>' + formatTime(totalDuration) + '</span>' +
+              '</div>' +
+            '</div>'
+          ) : (
+            '<div class="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1 border-t border-slate-800/40">' +
+              '<span class="truncate max-w-[200px] text-slate-400">' + secondaryText + '</span>' +
+              '<span id="rpc-time-' + idx + '" class="' + tagColor + ' shrink-0"></span>' +
+            '</div>'
+          ));
 
         container.appendChild(card);
 
-        // Track live duration progress for music RPC
         if (hasTimestamps) {
           const start = rpc.timestamps.start;
           const end = rpc.timestamps.end;
           const total = end - start;
-          const progressEl = card.querySelector(`#rpc-progress-${idx}`);
-          const currEl = card.querySelector(`#rpc-curr-${idx}`);
+          const progressEl = card.querySelector('#rpc-progress-' + idx);
+          const currEl = card.querySelector('#rpc-curr-' + idx);
 
           function updateRPCProgress() {
             const now = Date.now();
             const elapsed = Math.min(Math.max(0, now - start), total);
             const pct = (elapsed / total) * 100;
-            if (progressEl) progressEl.style.width = `${pct}%`;
+            if (progressEl) progressEl.style.width = pct + '%';
             if (currEl) currEl.textContent = formatTime(elapsed);
           }
           updateRPCProgress();
           const pInterval = setInterval(updateRPCProgress, 1000);
           rpcIntervals.push(pInterval);
-        } else if (rpc.timestamps?.start) {
-          // Standard elapsed timer
+        } else if (rpc.timestamps && rpc.timestamps.start) {
           const startMs = rpc.timestamps.start;
-          const timeElem = card.querySelector(`#rpc-time-${idx}`);
+          const timeElem = card.querySelector('#rpc-time-' + idx);
           if (timeElem) {
             timeElem.textContent = formatElapsed(startMs);
-            const intervalId = setInterval(() => {
+            const intervalId = setInterval(function() {
               timeElem.textContent = formatElapsed(startMs);
             }, 1000);
             rpcIntervals.push(intervalId);
@@ -844,26 +1089,24 @@
         }
       });
 
-      // ─── 3. EMPTY STATE (IF NO SPOTIFY AND NO RPCS) ───
       if (!hasSpotify && rpcActivities.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full p-4 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-500">
-            <span class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-slate-600"></span>
-              No active game, coding session, or music playback right now
-            </span>
-            <span class="text-[11px] text-slate-600">Idle</span>
-          </div>
-        `;
+        container.innerHTML = 
+          '<div class="col-span-full p-4 rounded-xl bg-slate-900/50 border border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-500">' +
+            '<span class="flex items-center gap-2">' +
+              '<span class="w-2 h-2 rounded-full bg-slate-600"></span>' +
+              'No active game, coding session, or music playback right now' +
+            '</span>' +
+            '<span class="text-[11px] text-slate-600">Idle</span>' +
+          '</div>';
       }
 
       lucide.createIcons();
     }
 
-    // Single REST fetch for immediate initial paint (zero lag)
+    // Fast initial REST fetch
     async function fetchImmediatePresence() {
       try {
-        const response = await fetch(`https://api.lanyard.rest/v1/users/${MY_DISCORD_USER_ID}`);
+        const response = await fetch("https://api.lanyard.rest/v1/users/" + MY_DISCORD_USER_ID);
         if (!response.ok) {
           const badge = document.getElementById('live-status-badge');
           if (response.status === 404 && badge) {
@@ -877,64 +1120,87 @@
           renderPresence(result.data);
         }
       } catch (err) {
-        console.debug("Initial REST sync error:", err);
+        console.debug("REST sync:", err);
       }
     }
 
     let heartbeatTimer = null;
     let fallbackPoll = null;
+    let directBannerCached = null;
+
+    async function fetchDirectUserBanner(userId, bannerImg, bannerContainer, fallbackColor) {
+      if (directBannerCached && bannerImg) {
+        bannerImg.src = directBannerCached;
+        bannerImg.classList.remove('opacity-0');
+        return;
+      }
+      try {
+        const res = await fetch("https://discord-lookup.lookupbotdc.workers.dev/search/" + userId);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.banner_url) {
+            // Extract clean base URL and request max resolution 4096px
+            let highResUrl = data.banner_url.split('?')[0] + "?size=4096";
+            directBannerCached = highResUrl;
+            if (bannerImg) {
+              bannerImg.src = highResUrl;
+              bannerImg.onload = function() {
+                bannerImg.classList.remove('opacity-0');
+              };
+            }
+            return;
+          }
+        }
+      } catch (e) {
+        console.debug("Direct banner lookup:", e);
+      }
+      if (bannerImg) bannerImg.classList.add('opacity-0');
+      if (bannerContainer) bannerContainer.style.backgroundColor = fallbackColor;
+    }
 
     function startPollingFallback() {
       if (fallbackPoll) return;
-      // 3.5s interval keeps your presence fresh if WebSockets are blocked
       fallbackPoll = setInterval(fetchImmediatePresence, 3500);
     }
 
-    // Real-Time WebSocket for instantaneous sub-second streaming
+    // Real-Time WebSocket Connection with graceful fallback
     function connectLanyard() {
       try {
         const socket = new WebSocket("wss://api.lanyard.rest/socket");
 
-        socket.onopen = () => {
-          // Connection opened; awaiting Opcode 1 (Hello)
-        };
-
-        socket.onmessage = (event) => {
+        socket.onmessage = function(event) {
           try {
             const msg = JSON.parse(event.data);
 
-            // Opcode 1: Hello -> Setup Heartbeat interval & initialize Opcode 2
             if (msg.op === 1) {
               if (heartbeatTimer) clearInterval(heartbeatTimer);
-              heartbeatTimer = setInterval(() => {
+              heartbeatTimer = setInterval(function() {
                 if (socket.readyState === WebSocket.OPEN) {
                   socket.send(JSON.stringify({ op: 3 }));
                 }
               }, msg.d.heartbeat_interval);
 
-              // Subscribe to user presence
               socket.send(JSON.stringify({
                 op: 2,
                 d: { subscribe_to_id: MY_DISCORD_USER_ID }
               }));
             }
 
-            // Opcode 0: Real-time Event Dispatch
             if (msg.op === 0 && (msg.t === "INIT_STATE" || msg.t === "PRESENCE_UPDATE")) {
               renderPresence(msg.d);
             }
           } catch (e) {
-            console.debug("Lanyard message parsing error:", e);
+            console.debug("Lanyard parse:", e);
           }
         };
 
-        socket.onerror = () => {
+        socket.onerror = function() {
           startPollingFallback();
         };
 
-        socket.onclose = () => {
+        socket.onclose = function() {
           if (heartbeatTimer) clearInterval(heartbeatTimer);
-          setTimeout(connectLanyard, 1500);
+          setTimeout(connectLanyard, 2000);
         };
       } catch (err) {
         startPollingFallback();
